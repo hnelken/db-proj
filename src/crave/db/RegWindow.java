@@ -1,31 +1,49 @@
 package crave.db;
 
-
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+/**
+ * This class is the window in which a new user can register themselves in the database. 
+ * It takes the user's full name, a username, and a password and attempts to add it to the database. 
+ * If the credentials do not meet length minimums or if the username is taken, there is an error prompt. 
+ * The login window is again reached through successful registration or the back button.
+ */
 public class RegWindow extends JFrame implements ActionListener {
 	
-	private CraveGUI crave;
-	private JTextField name;
-	private JTextField user;
-	private JPasswordField pw;
+	private CraveGUI crave;			// the gui manager
+	private JTextField name;		// the name text field
+	private JTextField user;		// the username text field
+	private JPasswordField pw;		//the password text field
 	
+	/**
+	 * Constructor - Initialize window settings
+	 * @param gui The manager that launched this window
+	 */
 	public RegWindow(CraveGUI gui) {
 		crave = gui;
-		setTitle("Crave - Cleveland Menu Database");	//frame setup
+		
+		/* Frame setup */
+		setTitle("Crave - Cleveland Menu Database");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		addComponentsToPane();		//add all elements to frame
-		setSize(500, 500);		//adjust frame
-		pack();							//make frame visible
+		addComponentsToPane();
+		setSize(500, 500);
+		
+		/* Make frame visible */
+		pack();
 		crave.centerFrame(this);
 	    setVisible(true);
 	}
 	
+	/**
+	 * Add buttons, labels, text boxes, and panels to the content pane.
+	 */
 	private void addComponentsToPane() {
+		
+		/* Create the components */
 		JTextField nameText = new JTextField(20);
 		JTextField userText = new JTextField(15);
         JPasswordField pwText = new JPasswordField(15);
@@ -153,18 +171,32 @@ public class RegWindow extends JFrame implements ActionListener {
 		}
 	}
 	
+	/**
+	 * Insert user instance in db with given credentials
+	 * @param namearg The new user's full name
+	 * @param username The new user's username
+	 * @param password The new user's password
+	 */
 	private void registerUser(String namearg, String username, char[] password) {
-		// Insert user instance in db with given credentials
 		crave.dbAccess.insertUser(namearg, username, password, crave.conn);
 	}
 	
+	/**
+	 * Check username and password length
+	 * @param username The user's input username
+	 * @param pwInput The user's input password being checked
+	 * @return Whether the input password matches the username's password in the database
+	 */
 	private boolean isInputValid(String username, char[] pwInput) {
-		// Check username and password length
 		return (username.length() > 2 && pwInput.length > 3);
 	}
 	
+	/**
+	 * Check if a username is taken
+	 * @param username The username being checked
+	 * @return True if there is a users tuple in the database with this username
+	 */
 	private boolean isUsernameValid(String username) {
-		// Check if a username is taken
 		return !crave.dbAccess.usernameExists(username, crave.conn);
 	}
 }

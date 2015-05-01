@@ -10,6 +10,13 @@ import java.util.HashMap;
 
 import javax.swing.*;
 
+/**
+ * This class is the main interface of the application, and is where user's select 
+ * search criteria and see the results of their searches. One side of the window 
+ * houses different forms of input to narrow the search and the other side is a text 
+ * box that is populated with clickable results. Clicking a result opens a window about 
+ * the restaurant that serves it, decribed below.
+ */
 public class SearchWindow extends JFrame implements ActionListener {
 	
 	public CraveGUI crave;

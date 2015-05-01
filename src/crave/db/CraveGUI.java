@@ -1,4 +1,5 @@
 package crave.db;
+
 import javax.swing.*;
 
 import java.awt.*;
@@ -21,8 +22,7 @@ public class CraveGUI {
 	private String currentUser;		// The username of the last user to successfully login
 
     /**
-     * Constructor
-     * Initializes QueryManager, connects to database, launches GUI.
+     * Constructor - Initializes QueryManager, connects to database, launches GUI.
      * @throws Exception if connection to database fails or if query template is not found
      */
     public CraveGUI() throws Exception {

@@ -10,10 +10,14 @@ import java.sql.Statement;
 import java.util.HashMap;
 
 /**
- * Created by Emilio on 4/26/15.
+ * This class is the detail window that opens upon clicking a result dish of a recent search. 
+ * This window contains the serving restaurant's name, address, and phone number, as well as 
+ * a dropdown menu containing all of the other dishes in the database that this restaurant serves. 
+ * At the bottom, there is an option to rate the dish currently highlighted by that dropdown menu.
  */
 public class RestaurantWindow extends JFrame implements ActionListener {
 
+	/** References include all search criteria input options */
     private CraveGUI crave;
     private int restaurantID;
     private String restaurantName, restaurantAddress;

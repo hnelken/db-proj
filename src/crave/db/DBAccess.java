@@ -3,6 +3,11 @@ package crave.db;
 import java.sql.*;
 import java.util.Properties;
 
+/**
+ * This class is the application's main method of contacting the database.
+ * It creates a connection to the database and uses it to execute various
+ * queries derived from user interaction with the application.
+ */
 public class DBAccess {
 	
 	/** The name of the MySQL account to use */
@@ -19,12 +24,21 @@ public class DBAccess {
 
 	/** The name of the database */
 	private final String dbName = "restaurantsApp";
+	
     private int userID;
 
+    /**
+     * Return the current userID
+     * @return the current userID
+     */
     public int getCurrentUserID() {
         return userID;
     }
 
+    /**
+     * Set the current user ID
+     * @param userID the new current userID
+     */
     private void setCurrentUserID(int userID) {
         this.userID = userID;
     }
@@ -44,7 +58,7 @@ public class DBAccess {
 	}
 	
 	/**
-	 * Queries the password associated with the given username in the database
+	 * Selects the password associated with the given username in the database
 	 * @param username The username who's password is being looked up
 	 * @param conn The connection to the database
 	 * @return A char array containing the password associated with the given username
@@ -71,6 +85,13 @@ public class DBAccess {
 		return pw.toCharArray();
 	}
 	
+	/**
+	 * Inserts a username into the database with account information
+	 * @param name The new user's full name
+	 * @param username The new user's username
+	 * @param password The new user's password
+	 * @param conn The database connection
+	 */
 	public void insertUser(String name, String username, char[] password, Connection conn) {
         String pwString = new String(password);
         System.out.printf("Inserting user %s with username %s and password %s\n", name, username, pwString);
@@ -87,6 +108,12 @@ public class DBAccess {
         }
     }
 	
+	/**
+	 * Checks if a username exists in the database
+	 * @param username The username being checked
+	 * @param conn The database connection
+	 * @return True if there is a "users" tuple in the database with the given username
+	 */
 	public boolean usernameExists(String username, Connection conn) {
         System.out.printf("Checking for username %s\n", username);
         Statement statement = null;
@@ -118,16 +145,18 @@ public class DBAccess {
         return result > 0;
     }
 
-
-
-    /** Executes a general query using the query generator and returns the result set */
+    /**
+     * Executes a general query using the query generator and returns the result set
+     * @param conn The database connection
+     * @param argString The argument string derived from search criteria
+     * @param manager The query manager
+     * @return A Pair object containing the results and the statement
+     */
 	public Pair<ResultSet, Statement> generalQuery(Connection conn, String argString, QueryManager manager) {
 		System.out.println("Querying database...");
 		Statement stmt = null;
 		ResultSet rs = null;
 		
-		//get the query according to the argString parameters (created in actionPerformed
-		//method of SearchWindow
 		Query q = manager.produceQuery(argString);
 		manager.flush();
 		
@@ -139,19 +168,7 @@ public class DBAccess {
 		} catch (SQLException e) {
 			System.err.println("ERROR: Could not execute query");
 			e.printStackTrace();
-		} 
-//		finally {
-//			try { if (stmt != null) stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-//			System.out.print('\n');
-//		}
+		}
 		return new Pair<ResultSet, Statement>(rs, stmt);
-	}
-	
-	/**
-	 * Connect to MySQL and execute queries specified in homework
-	 */
-	public void cleanup(Connection conn) {
-		try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-		System.out.println("Database access complete");
 	}
 }

@@ -8,7 +8,9 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 
 /**
- * The frame on the Crave GUI that contains the login window
+ * This class is the first interface of the application and allows
+ * a user to login or open the registration interface if they do not have
+ * a username. Will notify user of invalid credentials when necessary.
  */
 public class LoginWindow extends JFrame implements ActionListener {
 	
@@ -17,28 +19,25 @@ public class LoginWindow extends JFrame implements ActionListener {
 	private JTextField user;		//the username field
 	private JPasswordField pass;	//the password field
 	
+	/**
+	 * Constructor - Initializes frame
+	 * @param gui The GUI manager that opened this window
+	 */
 	public LoginWindow(CraveGUI gui) {
+		/* Manager reference */
 		crave = gui;
-		setTitle("Crave - Cleveland Menu Database");	//frame setup
+		
+		/* Frame setup */
+		setTitle("Crave - Cleveland Menu Database");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		addComponentsToPane();		//add all elements to frame
-		setSize(500, 500);		//adjust frame
-		setBackground(Color.BLACK);
-		pack();							//make frame visible
+		addComponentsToPane();
+		setSize(500, 500);
+		
+		/* Make frame visible */
+		pack();
 		crave.centerFrame(this);
 	    setVisible(true);
 	}
-	
-	/**
-	 * Sets the frame location to the center of the user's screen
-	 */
-	private void centerFrame() {
-    	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
-		Point newLocation = new Point(middle.x - (getWidth() / 2), 
-		                              middle.y - (getHeight() / 2));
-		setLocation(newLocation);
-    }
 	
 	/**
 	 * Adds labels, text fields, buttons, panels to frame.
@@ -116,15 +115,15 @@ public class LoginWindow extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals("register")) {
-			crave.registerUser(this);
+		if (e.getActionCommand().equals("register")) {		// If the "sign up" button was clicked
+			crave.registerUser(this);						// Open the registration window
 		}
-		else {
-			if (isUsernameValid() && isPasswordCorrect() ) {
-				crave.loginSuccess(this, user.getText());
-	        } 
-			else {
-	            JOptionPane.showMessageDialog(this,
+		else {													// Else if the "sign in" button was clicked 
+			if (isUsernameValid() && isPasswordCorrect() ) {	// Check the validity of the input credentials
+				crave.loginSuccess(this, user.getText());		// If username and password checkout,
+	        } 													// 		open the search window.
+			else {												// Else if the credentials arent valid
+	            JOptionPane.showMessageDialog(this,				// Display an appropriate error prompt
 	                "Invalid credentials. Try again.",
 	                "Error Message",
 	                JOptionPane.ERROR_MESSAGE);
@@ -132,12 +131,19 @@ public class LoginWindow extends JFrame implements ActionListener {
 		}
 	}
 	
+	/**
+	 * Checks if a username exists in the database
+	 * @return True if the username input is not empty and the username is in the database
+	 */
 	private boolean isUsernameValid() {
-		// Check if a username is taken
 		String username = user.getText();
 		return username.length() != 0 && crave.dbAccess.usernameExists(username, crave.conn);
 	}
 	
+	/**
+	 * Checks password against string associated with username in database
+	 * @return True if the input matches the username's password in the database
+	 */
 	private boolean isPasswordCorrect() {
 		char[] input = pass.getPassword();
 		char[] password = crave.dbAccess.queryPassword(user.getText(), crave.conn);
